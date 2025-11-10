@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ exam.title }} - نسخة الطلاب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: white;
+            color: #1e293b;
+            padding: 20px;
+            line-height: 1.8;
+        }
+        
+        .exam-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3b82f6;
+        }
+        
+        .exam-title {
+            font-size: 2rem;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+        
+        .exam-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            color: #64748b;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .student-info {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .student-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .student-field label {
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .student-field .field-line {
+            flex: 1;
+            border-bottom: 2px dotted #cbd5e1;
+            height: 30px;
+        }
+        
+        .questions-container {
+            margin-top: 30px;
+        }
+        
+        .question-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .question-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .question-type {
+            padding: 5px 15px;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .question-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .option-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #94a3b8;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .answer-space {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+            min-height: 60px;
+        }
+        
+        .answer-label {
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .question-card {
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+        }
+        
+        .print-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            padding: 15px 30px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .print-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button onclick="window.print()" class="print-button no-print">🖨️ طباعة</button>
+    
+    <div class="exam-header">
+        <h1 class="exam-title">{{ exam.title }}</h1>
+        <div class="exam-info">
+            <div class="info-item">
+                <strong>عدد الأسئلة:</strong>
+                <span>{{ exam.num_questions }}</span>
+            </div>
+            <div class="info-item">
+                <strong>المستوى:</strong>
+                <span>
+                    {% if exam.difficulty == 'easy' %}سهل
+                    {% elif exam.difficulty == 'medium' %}متوسط
+                    {% else %}صعب{% endif %}
+                </span>
+            </div>
+            <div class="info-item">
+                <strong>التاريخ:</strong>
+                <span>{{ exam.created_at.strftime('%Y-%m-%d') }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="student-info">
+        <div class="student-field">
+            <label>اسم الطالب:</label>
+            <div class="field-line"></div>
+        </div>
+        <div class="student-field">
+            <label>الرقم الجامعي:</label>
+            <div class="field-line"></div>
+        </div>
+        <div class="student-field">
+            <label>الشعبة:</label>
+            <div class="field-line"></div>
+        </div>
+        <div class="student-field">
+            <label>التوقيع:</label>
+            <div class="field-line"></div>
+        </div>
+    </div>
+    
+    <div class="questions-container">
+        {% for question in questions %}
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-number">السؤال {{ loop.index }}</div>
+                <div class="question-type">
+                    {% if question.question_type == 'mcq' %}اختيار من متعدد
+                    {% elif question.question_type == 'tf' %}صح/خطأ
+                    {% elif question.question_type == 'fill' %}أكمل الفراغ
+                    {% else %}سؤال مباشر{% endif %}
+                </div>
+            </div>
+            
+            <p class="question-text">{{ question.question_text }}</p>
+            
+            {% if question.question_type == 'mcq' and question.options %}
+            <div class="question-options">
+                {% for option in question.options %}
+                <div class="option-item">
+                    <div class="option-checkbox"></div>
+                    <div class="option-letter">{{ loop.index }}</div>
+                    <span>{{ option }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif question.question_type == 'tf' %}
+            <div class="question-options">
+                <div class="option-item">
+                    <div class="option-checkbox"></div>
+                    <span>صح</span>
+                </div>
+                <div class="option-item">
+                    <div class="option-checkbox"></div>
+                    <span>خطأ</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="answer-space">
+                <div class="answer-label">الإجابة:</div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

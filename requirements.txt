@@ -1,0 +1,12 @@
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Werkzeug==3.0.1
+PyPDF2==3.0.1
+google-generativeai==0.3.2
+python-docx==1.1.0
+reportlab==4.0.7
+python-dotenv==1.0.0
+arabic-reshaper==3.0.0
+python-bidi==0.4.2
+docxtpl==0.16.7

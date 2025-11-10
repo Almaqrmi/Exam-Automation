@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exam.title }} - المولّد الذكي للاختبارات{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Exam Header -->
+    <div class="exam-result-header">
+        <div class="exam-result-info">
+            <a href="{{ url_for('dashboard') }}" class="back-link">
+                <i class="fas fa-arrow-right"></i>
+                العودة إلى لوحة التحكم
+            </a>
+            
+            <h1 class="exam-result-title">
+                <i class="fas fa-check-circle"></i>
+                {{ exam.title }}
+            </h1>
+            
+            <div class="exam-result-meta">
+                <span class="meta-badge">
+                    <i class="fas fa-list"></i>
+                    {{ exam.num_questions }} سؤال
+                </span>
+                <span class="meta-badge">
+                    <i class="fas fa-layer-group"></i>
+                    {% if exam.question_type == 'mixed' %}منوع
+                    {% elif exam.question_type == 'mcq' %}اختيار متعدد
+                    {% elif exam.question_type == 'tf' %}صح/خطأ
+                    {% elif exam.question_type == 'fill' %}أكمل الفراغ
+                    {% else %}مباشرة{% endif %}
+                </span>
+                <span class="meta-badge">
+                    <i class="fas fa-signal"></i>
+                    {% if exam.difficulty == 'easy' %}سهل
+                    {% elif exam.difficulty == 'medium' %}متوسط
+                    {% else %}صعب{% endif %}
+                </span>
+                <span class="meta-badge">
+                    <i class="fas fa-calendar"></i>
+                    {{ exam.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </span>
+            </div>
+        </div>
+        
+        <div class="exam-result-actions">
+            <button onclick="window.print()" class="btn btn-secondary">
+                <i class="fas fa-print"></i>
+                <span>طباعة</span>
+            </button>
+            <a href="{{ url_for('export_word', exam_id=exam.id) }}" class="btn btn-secondary">
+                <i class="fas fa-file-word"></i>
+                <span>تصدير Word</span>
+            </a>
+            <a href="{{ url_for('export_pdf', exam_id=exam.id) }}" class="btn btn-secondary">
+                <i class="fas fa-file-pdf"></i>
+                <span>تصدير PDF</span>
+            </a>
+            <button onclick="copyQuestions()" class="btn btn-secondary">
+                <i class="fas fa-copy"></i>
+                <span>نسخ الأسئلة</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Questions List -->
+    <div class="questions-container">
+        {% for question in questions %}
+        <div class="question-card" data-type="{{ question.question_type }}">
+            <div class="question-header">
+                <div class="question-number">السؤال {{ loop.index }}</div>
+                <div class="question-type-badge {{ question.question_type }}">
+                    {% if question.question_type == 'mcq' %}
+                        <i class="fas fa-list-ul"></i> اختيار متعدد
+                    {% elif question.question_type == 'tf' %}
+                        <i class="fas fa-check-double"></i> صح/خطأ
+                    {% elif question.question_type == 'fill' %}
+                        <i class="fas fa-pen"></i> أكمل الفراغ
+                    {% else %}
+                        <i class="fas fa-question"></i> سؤال مباشر
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="question-content">
+                <p class="question-text">{{ question.question_text }}</p>
+                
+                {% if question.question_type == 'mcq' and question.options %}
+                <div class="question-options">
+                    {% for option in question.options %}
+                    <div class="option-item {% if option == question.correct_answer %}correct{% endif %}">
+                        <span class="option-letter">{{ loop.index }}.</span>
+                        <span class="option-text">{{ option }}</span>
+                        {% if option == question.correct_answer %}
+                        <i class="fas fa-check-circle option-correct-icon"></i>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="question-answer">
+                    <strong>
+                        <i class="fas fa-lightbulb"></i>
+                        الإجابة الصحيحة:
+                    </strong>
+                    <span class="answer-text">{{ question.correct_answer }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Print Instructions -->
+    <div class="print-instructions">
+        <i class="fas fa-info-circle"></i>
+        <p>نصيحة: يمكنك طباعة هذه الصفحة أو حفظها كملف PDF من خلال متصفحك</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyQuestions() {
+    let text = '{{ exam.title }}\n';
+    text += '='.repeat(50) + '\n\n';
+    
+    {% for question in questions %}
+    text += 'السؤال {{ loop.index }}: {{ question.question_text }}\n';
+    
+    {% if question.question_type == 'mcq' and question.options %}
+    {% for option in question.options %}
+    text += '{{ loop.index }}. {{ option }}\n';
+    {% endfor %}
+    {% endif %}
+    
+    text += 'الإجابة: {{ question.correct_answer }}\n\n';
+    {% endfor %}
+    
+    navigator.clipboard.writeText(text).then(() => {
+        alert('تم نسخ الأسئلة بنجاح!');
+    }).catch(err => {
+        alert('حدث خطأ أثناء النسخ');
+    });
+}
+</script>
+{% endblock %}

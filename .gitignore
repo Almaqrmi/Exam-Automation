@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+venv*/
+venEG/
+.venv/
+env/
+ENV/
+
+# Flask instance folder
+instance/
+instance/*.db
+
+# Uploaded files
+uploads/
+*.pdf
+
+# Environment variables
+.env
+
+# PyBuilder / packaging
+build/
+dist/
+*.egg-info/
+
+# Editors and OS files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Python cache and logs
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ReportLab / docx outputs and temporary files
+*.docx
+*.doc
+
+# Additional common Python/project ignores
+pyvenv.cfg
+Scripts/
+Lib/
+Include/
+
+# Compiled extensions
+*.so
+*.pyd
+
+# Wheel / pip metadata
+pip-wheel-metadata/
+
+# Test / coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# DB and logs
+*.sqlite3
+*.log
+
+# Misc
+desktop.ini
+.ipynb_checkpoints/
