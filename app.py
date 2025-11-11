@@ -376,7 +376,7 @@ def delete_exam(exam_id):
 @app.route('/exam/<int:exam_id>/export/word')
 @login_required
 def export_word(exam_id):
-    """Export exam to Word format"""
+    """Export exam to Word format using template"""
     exam = Exam.query.get_or_404(exam_id)
     
     if exam.user_id != current_user.id:
@@ -385,73 +385,56 @@ def export_word(exam_id):
     
     questions = Question.query.filter_by(exam_id=exam_id).all()
     
-    # Create Word document
-    doc = Document()
+    # Prepare questions data
+    questions_data = []
+    for q in questions:
+        q_data = {
+            'question': q.question_text,
+            'type': q.question_type,
+            'answer': q.correct_answer,
+            'options': json.loads(q.options) if q.options else []
+        }
+        questions_data.append(q_data)
     
-    # Set document formatting
-    style = doc.styles['Normal']
-    style.font.name = 'Times New Roman'
-    style.font.size = Pt(12)
+    # Path to template
+    template_path = os.path.join(os.path.dirname(__file__), 'templates_files', 'exam_template.docx')
     
-    # Title (16pt)
-    title = doc.add_heading(exam.title, level=1)
-    title_run = title.runs[0]
-    title_run.font.size = Pt(16)
-    title_run.font.color.rgb = None  # Black
-    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    # Check if template exists
+    if not os.path.exists(template_path):
+        flash(f'Template not found at: {template_path}', 'error')
+        return redirect(url_for('view_exam', exam_id=exam_id))
     
-    # Exam information (14pt for headings)
-    info_para = doc.add_paragraph()
-    info_para.add_run('Exam Information\n').bold = True
-    info_para.runs[0].font.size = Pt(14)
-    
-    info_text = doc.add_paragraph()
-    info_text.add_run(f'Number of Questions: {exam.num_questions}\n')
-    info_text.add_run(f'Difficulty: {exam.difficulty.title()}\n')
-    info_text.add_run(f'Date: {exam.created_at.strftime("%Y-%m-%d")}\n')
-    
-    doc.add_paragraph('_' * 60)
-    doc.add_paragraph()
-    
-    # Questions
-    for idx, q in enumerate(questions, 1):
-        # Question number and text (14pt)
-        q_heading = doc.add_paragraph()
-        q_num_run = q_heading.add_run(f'Question {idx}: ')
-        q_num_run.bold = True
-        q_num_run.font.size = Pt(14)
+    try:
+        # Use template
+        doc = DocxTemplate(template_path)
         
-        q_text_run = q_heading.add_run(q.question_text)
-        q_text_run.font.size = Pt(12)
+        # Prepare context
+        context = {
+            'exam_title': exam.title,
+            'exam_date': exam.created_at.strftime('%Y-%m-%d'),
+            'num_questions': exam.num_questions,
+            'difficulty': exam.difficulty.title(),
+            'questions': questions_data,
+            'show_answers': False  # ← المتغير هنا! غيره إلى False لإخفاء الإجابات
+        }
         
-        # Options for MCQ
-        if q.question_type == 'mcq' and q.options:
-            options = json.loads(q.options)
-            for i, option in enumerate(options, 1):
-                opt_para = doc.add_paragraph(f'   {chr(64+i)}. {option}')
-                opt_para.style = 'List Number'
+        # Render template
+        doc.render(context)
         
-        # Answer
-        ans_para = doc.add_paragraph()
-        ans_run = ans_para.add_run('Answer: ')
-        ans_run.bold = True
-        ans_run.font.size = Pt(12)
-        ans_para.add_run(q.correct_answer)
+        # Save to buffer
+        buffer = BytesIO()
+        doc.save(buffer)
+        buffer.seek(0)
         
-        doc.add_paragraph()  # Empty line
-    
-    # Save document
-    buffer = BytesIO()
-    doc.save(buffer)
-    buffer.seek(0)
-    
-    return send_file(
-        buffer,
-        as_attachment=True,
-        download_name=f'{exam.title}.docx',
-        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    )
-
+        return send_file(
+            buffer,
+            as_attachment=True,
+            download_name=f'{exam.title}.docx',
+            mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+    except Exception as e:
+        flash(f'Error generating document: {str(e)}', 'error')
+        return redirect(url_for('view_exam', exam_id=exam_id))
 
 @app.route('/exam/<int:exam_id>/export/pdf')
 @login_required
