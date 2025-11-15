@@ -27,23 +27,25 @@
                 <div class="form-group">
                     <label for="pdf_file">
                         <i class="fas fa-file-pdf"></i>
-                        ملف المحاضرة (PDF)
+                        Lecture Files (PDF) - Multiple files supported
                     </label>
                     <div class="file-upload-wrapper">
                         <input 
                             type="file" 
                             id="pdf_file" 
-                            name="pdf_file" 
+                            name="pdf_files" 
                             accept=".pdf"
                             required
+                            multiple
                             class="file-input"
                         >
                         <div class="file-upload-display">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <span id="fileName">اختر ملف PDF أو اسحبه هنا</span>
-                            <small>الحد الأقصى: 16 ميجابايت</small>
+                            <span id="fileName">Choose PDF files or drag them here</span>
+                            <small>Max 5 files • 16MB each</small>
                         </div>
                     </div>
+                    <div id="filesList" class="files-list"></div>
                 </div>
 
                 <!-- Exam Title -->

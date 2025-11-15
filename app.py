@@ -30,6 +30,17 @@ app = Flask(__name__)
 app.config.from_object(Config)
 Config.init_app(app)
 
+# إضافة فلتر from_json لـ Jinja2
+@app.template_filter('from_json')
+def from_json_filter(value):
+    """تحويل JSON string إلى Python object"""
+    if value:
+        try:
+            return json.loads(value)
+        except:
+            return []
+    return []
+
 # تهيئة قاعدة البيانات
 db.init_app(app)
 
@@ -73,7 +84,7 @@ def extract_text_from_pdf(pdf_path):
 def generate_questions_with_ai(text, num_questions, question_type, difficulty):
     """Generate questions using Gemini AI"""
     try:
-        # Use the correct model (replace with your working model)
+        # استخدم النموذج الذي يعمل
         model = genai.GenerativeModel('gemini-2.5-flash')
         
         # Build the prompt based on question type
@@ -253,51 +264,80 @@ def dashboard():
 @app.route('/generate', methods=['POST'])
 @login_required
 def generate_exam():
-    """توليد اختبار جديد"""
+    """توليد اختبار جديد من ملف أو عدة ملفات"""
     try:
-        # التحقق من وجود ملف
-        if 'pdf_file' not in request.files:
-            return jsonify({'error': 'لم يتم رفع ملف'}), 400
+        # التحقق من وجود ملفات
+        if 'pdf_files' not in request.files:
+            return jsonify({'error': 'No files uploaded'}), 400
         
-        file = request.files['pdf_file']
+        files = request.files.getlist('pdf_files')
         
-        if file.filename == '':
-            return jsonify({'error': 'لم يتم اختيار ملف'}), 400
+        if not files or len(files) == 0:
+            return jsonify({'error': 'No files selected'}), 400
         
-        if not allowed_file(file.filename):
-            return jsonify({'error': 'نوع الملف غير مسموح. يرجى رفع ملف PDF'}), 400
+        # التحقق من عدد الملفات
+        if len(files) > 5:
+            return jsonify({'error': 'Maximum 5 files allowed'}), 400
         
-        # حفظ الملف
-        filename = secure_filename(file.filename)
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{timestamp}_{filename}"
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
+        # قائمة لحفظ أسماء الملفات والنصوص
+        saved_filenames = []
+        all_texts = []
         
-        # استخراج النص من PDF
-        text = extract_text_from_pdf(filepath)
+        # معالجة كل ملف
+        for file in files:
+            if file.filename == '':
+                continue
+                
+            if not allowed_file(file.filename):
+                return jsonify({'error': f'Invalid file type: {file.filename}. Only PDF allowed'}), 400
+            
+            # حفظ الملف
+            filename = secure_filename(file.filename)
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"{timestamp}_{filename}"
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            saved_filenames.append(filename)
+            
+            # استخراج النص من PDF
+            text = extract_text_from_pdf(filepath)
+            
+            if not text:
+                # حذف الملفات المحفوظة في حالة الفشل
+                for fn in saved_filenames:
+                    fp = os.path.join(app.config['UPLOAD_FOLDER'], fn)
+                    if os.path.exists(fp):
+                        os.remove(fp)
+                return jsonify({'error': f'Cannot read content from: {file.filename}'}), 400
+            
+            all_texts.append(text)
         
-        if not text:
-            os.remove(filepath)
-            return jsonify({'error': 'لا يمكن قراءة محتوى الملف'}), 400
+        # دمج جميع النصوص
+        combined_text = "\n\n--- NEW DOCUMENT ---\n\n".join(all_texts)
         
         # الحصول على معاملات التوليد
         num_questions = int(request.form.get('num_questions', 10))
         question_type = request.form.get('question_type', 'mixed')
         difficulty = request.form.get('difficulty', 'medium')
-        exam_title = request.form.get('exam_title', 'اختبار جديد')
+        exam_title = request.form.get('exam_title', 'New Exam')
         
         # توليد الأسئلة
-        questions_data = generate_questions_with_ai(text, num_questions, question_type, difficulty)
+        questions_data = generate_questions_with_ai(combined_text, num_questions, question_type, difficulty)
         
         if not questions_data or 'questions' not in questions_data:
-            os.remove(filepath)
-            return jsonify({'error': 'فشل في توليد الأسئلة'}), 500
+            # حذف الملفات في حالة الفشل
+            for filename in saved_filenames:
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                if os.path.exists(filepath):
+                    os.remove(filepath)
+            return jsonify({'error': 'Failed to generate questions'}), 500
         
         # حفظ الاختبار في قاعدة البيانات
         exam = Exam(
             title=exam_title,
-            pdf_filename=filename,
+            pdf_filename=saved_filenames[0] if len(saved_filenames) == 1 else None,  # للتوافق مع القديم
+            pdf_files=json.dumps(saved_filenames),  # حفظ جميع الملفات
             num_questions=num_questions,
             question_type=question_type,
             difficulty=difficulty,
@@ -322,12 +362,13 @@ def generate_exam():
         return jsonify({
             'success': True,
             'exam_id': exam.id,
+            'files_count': len(saved_filenames),
             'redirect': url_for('view_exam', exam_id=exam.id)
         })
         
     except Exception as e:
-        print(f"خطأ: {str(e)}")
-        return jsonify({'error': 'حدث خطأ أثناء توليد الاختبار'}), 500
+        print(f"Error: {str(e)}")
+        return jsonify({'error': 'An error occurred while generating the exam'}), 500
 
 
 @app.route('/exam/<int:exam_id>')
@@ -360,8 +401,19 @@ def delete_exam(exam_id):
     if exam.user_id != current_user.id:
         return jsonify({'error': 'غير مصرح'}), 403
     
-    # حذف ملف PDF
-    if exam.pdf_filename:
+    # حذف ملفات PDF
+    if exam.pdf_files:
+        # حذف الملفات المتعددة
+        try:
+            filenames = json.loads(exam.pdf_files)
+            for filename in filenames:
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                if os.path.exists(filepath):
+                    os.remove(filepath)
+        except:
+            pass
+    elif exam.pdf_filename:
+        # حذف الملف الواحد (للتوافق مع الاختبارات القديمة)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], exam.pdf_filename)
         if os.path.exists(filepath):
             os.remove(filepath)
@@ -401,10 +453,40 @@ def export_word(exam_id):
     
     # Check if template exists
     if not os.path.exists(template_path):
-        flash(f'Template not found at: {template_path}', 'error')
-        return redirect(url_for('view_exam', exam_id=exam_id))
-    
-    try:
+        # Fallback: create simple document without template
+        flash('Template not found, creating simple document', 'warning')
+        doc = Document()
+        
+        # Title
+        title = doc.add_heading(exam.title, level=1)
+        title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        
+        # Info
+        doc.add_paragraph(f'Number of Questions: {exam.num_questions}')
+        doc.add_paragraph(f'Difficulty: {exam.difficulty.title()}')
+        doc.add_paragraph(f'Date: {exam.created_at.strftime("%Y-%m-%d")}')
+        doc.add_paragraph('_' * 60)
+        
+        # Questions
+        for idx, q in enumerate(questions, 1):
+            q_para = doc.add_paragraph()
+            q_para.add_run(f'Question {idx}: ').bold = True
+            q_para.add_run(q.question_text)
+            
+            if q.question_type == 'mcq' and q.options:
+                options = json.loads(q.options)
+                for i, option in enumerate(options, 1):
+                    doc.add_paragraph(f'   {chr(64+i)}. {option}')
+            
+            ans_para = doc.add_paragraph()
+            ans_para.add_run('Answer: ').bold = True
+            ans_para.add_run(q.correct_answer)
+            doc.add_paragraph()
+        
+        buffer = BytesIO()
+        doc.save(buffer)
+        buffer.seek(0)
+    else:
         # Use template
         doc = DocxTemplate(template_path)
         
@@ -415,7 +497,7 @@ def export_word(exam_id):
             'num_questions': exam.num_questions,
             'difficulty': exam.difficulty.title(),
             'questions': questions_data,
-            'show_answers': False  # ← المتغير هنا! غيره إلى False لإخفاء الإجابات
+            'show_answers': True  # Set to False if you don't want to show answers
         }
         
         # Render template
@@ -425,16 +507,14 @@ def export_word(exam_id):
         buffer = BytesIO()
         doc.save(buffer)
         buffer.seek(0)
-        
-        return send_file(
-            buffer,
-            as_attachment=True,
-            download_name=f'{exam.title}.docx',
-            mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        )
-    except Exception as e:
-        flash(f'Error generating document: {str(e)}', 'error')
-        return redirect(url_for('view_exam', exam_id=exam_id))
+    
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f'{exam.title}.docx',
+        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+
 
 @app.route('/exam/<int:exam_id>/export/pdf')
 @login_required
