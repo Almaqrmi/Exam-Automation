@@ -11,5 +11,4 @@ arabic-reshaper==3.0.0
 python-bidi==0.4.2
 docxtpl==0.16.7
 gunicorn==23.0.0
-psycopg[binary]
-
+psycopg[binary]==3.2.3
