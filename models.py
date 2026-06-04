@@ -39,7 +39,8 @@ class Exam(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
-    pdf_filename = db.Column(db.String(255))
+    pdf_filename = db.Column(db.String(255))  # الآن يمكن أن يحتوي على أسماء متعددة (JSON)
+    pdf_files = db.Column(db.Text)  # أسماء الملفات المتعددة بصيغة JSON
     num_questions = db.Column(db.Integer, default=10)
     question_type = db.Column(db.String(50))  # 'mixed', 'mcq', 'tf', 'fill', 'direct'
     difficulty = db.Column(db.String(20))     # 'easy', 'medium', 'hard'
@@ -62,11 +63,12 @@ class Question(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.Text, nullable=False)
-    question_type = db.Column(db.String(50)) 
+    question_type = db.Column(db.String(50))  # 'mcq', 'tf', 'fill', 'direct'
     correct_answer = db.Column(db.Text)
-    options = db.Column(db.Text)  
+    options = db.Column(db.Text)  # سيتم تخزينها كـ JSON string
     points = db.Column(db.Integer, default=1)
     
+    # مفتاح خارجي للاختبار
     exam_id = db.Column(db.Integer, db.ForeignKey('exams.id'), nullable=False)
     
     def __repr__(self):

@@ -40,6 +40,13 @@
                     <i class="fas fa-calendar"></i>
                     {{ exam.created_at.strftime('%Y-%m-%d %H:%M') }}
                 </span>
+                {% if exam.pdf_files %}
+                <span class="meta-badge">
+                    <i class="fas fa-file-pdf"></i>
+                    {% set files_list = exam.pdf_files|from_json %}
+                    {{ files_list|length }} file(s)
+                </span>
+                {% endif %}
             </div>
         </div>
         
