@@ -5,6 +5,8 @@ import os
 import json
 from datetime import datetime
 from io import BytesIO
+import zipfile
+import random
 
 # استيراد الإعدادات والنماذج
 from config import Config
@@ -322,6 +324,11 @@ def generate_exam():
         difficulty = request.form.get('difficulty', 'medium')
         exam_title = request.form.get('exam_title', 'New Exam')
         
+        # الإعدادات الإضافية الجديدة
+        show_answers = request.form.get('show_answers') == 'on'
+        num_versions = int(request.form.get('num_versions', 1))
+        teacher_name = request.form.get('teacher_name', '')
+        
         # توليد الأسئلة
         questions_data = generate_questions_with_ai(combined_text, num_questions, question_type, difficulty)
         
@@ -341,6 +348,9 @@ def generate_exam():
             num_questions=num_questions,
             question_type=question_type,
             difficulty=difficulty,
+            show_answers=show_answers,
+            num_versions=num_versions,
+            teacher_name=teacher_name,
             user_id=current_user.id
         )
         db.session.add(exam)
@@ -488,32 +498,79 @@ def export_word(exam_id):
         buffer.seek(0)
     else:
         # Use template
-        doc = DocxTemplate(template_path)
+        # Check how many versions are needed
+        num_versions = getattr(exam, 'num_versions', 1) or 1
+        teacher_name = getattr(exam, 'teacher_name', '') or ''
+        show_answers = getattr(exam, 'show_answers', False)
         
-        # Prepare context
-        context = {
-            'exam_title': exam.title,
-            'exam_date': exam.created_at.strftime('%Y-%m-%d'),
-            'num_questions': exam.num_questions,
-            'difficulty': exam.difficulty.title(),
-            'questions': questions_data,
-            'show_answers': True  # Set to False if you don't want to show answers
-        }
-        
-        # Render template
-        doc.render(context)
-        
-        # Save to buffer
-        buffer = BytesIO()
-        doc.save(buffer)
-        buffer.seek(0)
-    
-    return send_file(
-        buffer,
-        as_attachment=True,
-        download_name=f'{exam.title}.docx',
-        mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    )
+        if num_versions > 1:
+            zip_buffer = BytesIO()
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                for i in range(num_versions):
+                    version_doc = DocxTemplate(template_path)
+                    
+                    # Shuffle questions and options for this version
+                    import copy
+                    shuffled_questions = copy.deepcopy(questions_data)
+                    random.shuffle(shuffled_questions)
+                    
+                    # Shuffle options within MCQ questions
+                    for sq in shuffled_questions:
+                        if sq.get('type') == 'mcq' and sq.get('options'):
+                            random.shuffle(sq['options'])
+                    
+                    context = {
+                        'exam_title': f"{exam.title} - Model {chr(65+i)}", # Model A, B...
+                        'exam_date': exam.created_at.strftime('%Y-%m-%d'),
+                        'num_questions': exam.num_questions,
+                        'difficulty': exam.difficulty.title(),
+                        'questions': shuffled_questions,
+                        'show_answers': show_answers,
+                        'teacher_name': teacher_name,
+                        'teacher': teacher_name # Typo fallback
+                    }
+                    version_doc.render(context)
+                    
+                    doc_buffer = BytesIO()
+                    version_doc.save(doc_buffer)
+                    zip_file.writestr(f'{exam.title}_Model_{chr(65+i)}.docx', doc_buffer.getvalue())
+            
+            zip_buffer.seek(0)
+            return send_file(
+                zip_buffer,
+                as_attachment=True,
+                download_name=f'{exam.title}_Models.zip',
+                mimetype='application/zip'
+            )
+        else:
+            doc = DocxTemplate(template_path)
+            
+            # Prepare context
+            context = {
+                'exam_title': exam.title,
+                'exam_date': exam.created_at.strftime('%Y-%m-%d'),
+                'num_questions': exam.num_questions,
+                'difficulty': exam.difficulty.title(),
+                'questions': questions_data,
+                'show_answers': show_answers,
+                'teacher_name': teacher_name,
+                'teacher': teacher_name # Typo fallback
+            }
+            
+            # Render template
+            doc.render(context)
+            
+            # Save to buffer
+            buffer = BytesIO()
+            doc.save(buffer)
+            buffer.seek(0)
+            
+            return send_file(
+                buffer,
+                as_attachment=True,
+                download_name=f'{exam.title}.docx',
+                mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
 
 
 @app.route('/exam/<int:exam_id>/export/pdf')
