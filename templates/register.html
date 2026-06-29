@@ -1,28 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}إنشاء حساب - المولّد الذكي للاختبارات{% endblock %}
+{% block title %}{{ _('إنشاء حساب - المولّد الذكي للاختبارات') }}{% endblock %}
 
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
             <i class="fas fa-user-plus"></i>
-            <h1>إنشاء حساب جديد</h1>
-            <p>انضم إلينا وابدأ في توليد اختباراتك الذكية</p>
+            <h1>{{ _('إنشاء حساب جديد') }}</h1>
+            <p>{{ _('انضم إلينا وابدأ في توليد اختباراتك الذكية') }}</p>
         </div>
 
         <form method="POST" action="{{ url_for('register') }}">
             <div class="form-group">
                 <label for="full_name">
                     <i class="fas fa-id-card"></i>
-                    الاسم الكامل
+                    {{ _('الاسم الكامل') }}
                 </label>
                 <input 
                     type="text" 
                     id="full_name" 
                     name="full_name" 
                     class="form-input" 
-                    placeholder="أدخل اسمك الكامل"
+                    placeholder="{{ _('أدخل اسمك الكامل') }}"
                     autocomplete="name"
                 >
             </div>
@@ -30,14 +30,14 @@
             <div class="form-group">
                 <label for="username">
                     <i class="fas fa-user"></i>
-                    اسم المستخدم
+                    {{ _('اسم المستخدم') }}
                 </label>
                 <input 
                     type="text" 
                     id="username" 
                     name="username" 
                     class="form-input" 
-                    placeholder="اختر اسم مستخدم"
+                    placeholder="{{ _('اختر اسم مستخدم') }}"
                     required
                     autocomplete="username"
                 >
@@ -46,14 +46,14 @@
             <div class="form-group">
                 <label for="email">
                     <i class="fas fa-envelope"></i>
-                    البريد الإلكتروني
+                    {{ _('البريد الإلكتروني') }}
                 </label>
                 <input 
                     type="email" 
                     id="email" 
                     name="email" 
                     class="form-input" 
-                    placeholder="example@domain.com"
+                    placeholder="{{ _('example@domain.com') }}"
                     required
                     autocomplete="email"
                 >
@@ -62,14 +62,14 @@
             <div class="form-group">
                 <label for="password">
                     <i class="fas fa-lock"></i>
-                    كلمة المرور
+                    {{ _('كلمة المرور') }}
                 </label>
                 <input 
                     type="password" 
                     id="password" 
                     name="password" 
                     class="form-input" 
-                    placeholder="أدخل كلمة مرور قوية"
+                    placeholder="{{ _('أدخل كلمة مرور قوية') }}"
                     required
                     minlength="6"
                     autocomplete="new-password"
@@ -78,13 +78,13 @@
 
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i>
-                <span>إنشاء الحساب</span>
+                <span>{{ _('إنشاء الحساب') }}</span>
             </button>
         </form>
 
         <div class="auth-link">
-            لديك حساب بالفعل؟ 
-            <a href="{{ url_for('login') }}">سجّل دخولك</a>
+            {{ _('لديك حساب بالفعل؟') }} 
+            <a href="{{ url_for('login') }}">{{ _('سجّل دخولك') }}</a>
         </div>
     </div>
 </div>

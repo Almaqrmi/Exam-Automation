@@ -1,28 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}تسجيل الدخول - المولّد الذكي للاختبارات{% endblock %}
+{% block title %}{{ _('تسجيل الدخول - المولّد الذكي للاختبارات') }}{% endblock %}
 
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
         <div class="auth-header">
             <i class="fas fa-sign-in-alt"></i>
-            <h1>مرحباً بعودتك</h1>
-            <p>سجّل دخولك للوصول إلى حسابك</p>
+            <h1>{{ _('مرحباً بعودتك') }}</h1>
+            <p>{{ _('سجّل دخولك للوصول إلى حسابك') }}</p>
         </div>
 
         <form method="POST" action="{{ url_for('login') }}">
             <div class="form-group">
                 <label for="username">
                     <i class="fas fa-user"></i>
-                    اسم المستخدم
+                    {{ _('اسم المستخدم') }}
                 </label>
                 <input 
                     type="text" 
                     id="username" 
                     name="username" 
                     class="form-input" 
-                    placeholder="أدخل اسم المستخدم"
+                    placeholder="{{ _('أدخل اسم المستخدم') }}"
                     required
                     autocomplete="username"
                 >
@@ -31,14 +31,14 @@
             <div class="form-group">
                 <label for="password">
                     <i class="fas fa-lock"></i>
-                    كلمة المرور
+                    {{ _('كلمة المرور') }}
                 </label>
                 <input 
                     type="password" 
                     id="password" 
                     name="password" 
                     class="form-input" 
-                    placeholder="أدخل كلمة المرور"
+                    placeholder="{{ _('أدخل كلمة المرور') }}"
                     required
                     autocomplete="current-password"
                 >
@@ -46,13 +46,13 @@
 
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-sign-in-alt"></i>
-                <span>تسجيل الدخول</span>
+                <span>{{ _('تسجيل الدخول') }}</span>
             </button>
         </form>
 
         <div class="auth-link">
-            ليس لديك حساب؟ 
-            <a href="{{ url_for('register') }}">سجّل الآن</a>
+            {{ _('ليس لديك حساب؟') }} 
+            <a href="{{ url_for('register') }}">{{ _('سجّل الآن') }}</a>
         </div>
     </div>
 </div>

@@ -8,9 +8,9 @@
     <div class="welcome-section">
         <h1 class="welcome-title">
             <i class="fas fa-sparkles"></i>
-            مرحباً، {{ current_user.full_name or current_user.username }}!
+            {{ _('مرحباً،') }} {{ current_user.full_name or current_user.username }}!
         </h1>
-        <p class="welcome-subtitle">جاهز لإنشاء اختبار ذكي جديد؟</p>
+        <p class="welcome-subtitle">{{ _('جاهز لإنشاء اختبار ذكي جديد؟') }}</p>
     </div>
 
     <!-- Upload Section -->
@@ -18,8 +18,8 @@
         <div class="upload-card">
             <div class="upload-header">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <h2>إنشاء اختبار جديد</h2>
-                <p>ارفع ملف PDF واختر الإعدادات لتوليد الأسئلة تلقائياً</p>
+                <h2>{{ _('إنشاء اختبار جديد') }}</h2>
+                <p>{{ _('ارفع ملف PDF واختر الإعدادات لتوليد الأسئلة تلقائياً') }}</p>
             </div>
 
             <form id="uploadForm" enctype="multipart/form-data">
@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <label for="pdf_file">
                         <i class="fas fa-file-pdf"></i>
-                        Lecture Files (PDF) - Multiple files supported
+                        {{ _('ملفات pdf - يدعم ملفات متعددة (5 ملفات كحد أقصى)') }}
                     </label>
                     <div class="file-upload-wrapper">
                         <input 
@@ -41,8 +41,8 @@
                         >
                         <div class="file-upload-display">
                             <i class="fas fa-cloud-upload-alt"></i>
-                            <span id="fileName">Choose PDF files or drag them here</span>
-                            <small>Max 5 files • 16MB each</small>
+                            <span id="fileName">{{ _('اختر ملفات PDF أو اسحبها هنا') }}</span>
+                            <small>{{ _('كحد أقصى 5 ملفات • 16 ميجابايت لكل ملف') }}</small>
                         </div>
                     </div>
                     <div id="filesList" class="files-list"></div>
@@ -54,14 +54,14 @@
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="exam_title">
                             <i class="fas fa-heading"></i>
-                            عنوان الاختبار
+                            {{ _('عنوان الاختبار') }}
                         </label>
                         <input 
                             type="text" 
                             id="exam_title" 
                             name="exam_title" 
                             class="form-input" 
-                            placeholder="مثال: اختبار الفصل الأول"
+                            placeholder="{{ _('مثال: اختبار الفصل الأول') }}"
                             required
                         >
                     </div>
@@ -70,20 +70,20 @@
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="teacher_name">
                             <i class="fas fa-user-tie"></i>
-                            اسم دكتور المادة
+                             {{ _('دكتور المادة') }}
                         </label>
-                        <input type="text" id="teacher_name" name="teacher_name" class="form-input" placeholder="مثال: د. أحمد">
+                        <input type="text" id="teacher_name" name="teacher_name" class="form-input" placeholder="{{ _('مثال: د. أحمد') }}">
                     </div>
 
                     <!-- Number of Versions -->
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="num_versions">
                             <i class="fas fa-copy"></i>
-                            عدد النماذج
+                            {{ _('عدد النماذج') }}
                         </label>
                         <select id="num_versions" name="num_versions" class="form-input">
-                            <option value="1" selected>نموذج واحد</option>
-                            <option value="2">نموذجين</option>
+                            <option value="1" selected>{{ _('نموذج واحد') }}</option>
+                            <option value="2">{{ _('نموذجين') }}</option>
                         </select>
                     </div>
 
@@ -91,11 +91,11 @@
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>
                             <i class="fas fa-image"></i>
-                            شعار المؤسسة (اختياري)
+                            {{ _('شعار الجامعه (اختياري)') }}
                         </label>
-                        <div class="logo-upload-area">
+                        <div class="    ">
                             <label for="school_logo" class="logo-upload-btn">
-                                <i class="fas fa-upload"></i> أضف شعار
+                                <i class="fas fa-upload"></i> {{ _('أضف شعار') }}
                             </label>
                             <input type="file" id="school_logo" name="school_logo" accept="image/*" style="display: none;">
                             <img id="logoPreview" class="logo-preview" alt="Preview">
@@ -109,7 +109,7 @@
                     <div class="form-group">
                         <label for="num_questions">
                             <i class="fas fa-list-ol"></i>
-                            عدد الأسئلة
+                            {{ _('عدد الأسئلة') }}
                         </label>
                         <input 
                             type="number" 
@@ -127,14 +127,14 @@
                     <div class="form-group">
                         <label for="question_type">
                             <i class="fas fa-question-circle"></i>
-                            نوع الأسئلة
+                            {{ _('نوع الأسئلة') }}
                         </label>
                         <select id="question_type" name="question_type" class="form-input">
-                            <option value="mixed">منوع (جميع الأنواع)</option>
-                            <option value="mcq">اختيار من متعدد</option>
-                            <option value="tf">صح أو خطأ</option>
-                            <option value="fill">أكمل الفراغ</option>
-                            <option value="direct">أسئلة مباشرة</option>
+                            <option value="mixed">{{ _('منوع (جميع الأنواع)') }}</option>
+                            <option value="mcq">{{ _('اختيار من متعدد') }}</option>
+                            <option value="tf">{{ _('صح أو خطأ') }}</option>
+                            <option value="fill">{{ _('أكمل الفراغ') }}</option>
+                            <option value="direct">{{ _('أسئلة مباشرة') }}</option>
                         </select>
                     </div>
 
@@ -142,19 +142,19 @@
                     <div class="form-group">
                         <label for="difficulty">
                             <i class="fas fa-chart-line"></i>
-                            مستوى الصعوبة
+                            {{ _('مستوى الصعوبة') }}
                         </label>
                         <select id="difficulty" name="difficulty" class="form-input">
-                            <option value="easy">سهل</option>
-                            <option value="medium" selected>متوسط</option>
-                            <option value="hard">صعب</option>
+                            <option value="easy">{{ _('سهل') }}</option>
+                            <option value="medium" selected>{{ _('متوسط') }}</option>
+                            <option value="hard">{{ _('صعب') }}</option>
                         </select>
                     </div>
                     <!-- Show Answers Toggle -->
                     <label class="toggle-label">
                         <input type="checkbox" name="show_answers" id="show_answers">
                         <div class="toggle-switch"></div>
-                        <span>مع الإجابة</span>
+                        <span>{{ _('مع الإجابة') }}</span>
                     </label>
                 </div>
 
@@ -163,7 +163,7 @@
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary btn-lg" id="generateBtn" style="margin-top: 10px;">
                     <i class="fas fa-magic"></i>
-                    <span>توليد الاختبار</span>
+                    <span>{{ _('توليد الاختبار') }}</span>
                 </button>
             </form>
         </div>
@@ -174,7 +174,7 @@
     <div class="exams-section">
         <h2 class="section-title">
             <i class="fas fa-history"></i>
-            الاختبارات السابقة
+            {{ _('الاختبارات السابقة') }}
         </h2>
         
         <div class="exams-grid">
@@ -188,24 +188,24 @@
                 <div class="exam-info">
                     <div class="exam-info-item">
                         <i class="fas fa-list"></i>
-                        <span>{{ exam.num_questions }} سؤال</span>
+                        <span>{{ exam.num_questions }} {{ _('سؤال') }}</span>
                     </div>
                     <div class="exam-info-item">
                         <i class="fas fa-layer-group"></i>
                         <span>
-                            {% if exam.question_type == 'mixed' %}منوع
-                            {% elif exam.question_type == 'mcq' %}اختيار متعدد
-                            {% elif exam.question_type == 'tf' %}صح/خطأ
-                            {% elif exam.question_type == 'fill' %}أكمل الفراغ
-                            {% else %}مباشرة{% endif %}
+                            {% if exam.question_type == 'mixed' %}{{ _('منوع') }}
+                            {% elif exam.question_type == 'mcq' %}{{ _('اختيار متعدد') }}
+                            {% elif exam.question_type == 'tf' %}{{ _('صح/خطأ') }}
+                            {% elif exam.question_type == 'fill' %}{{ _('أكمل الفراغ') }}
+                            {% else %}{{ _('مباشرة') }}{% endif %}
                         </span>
                     </div>
                     <div class="exam-info-item">
                         <i class="fas fa-signal"></i>
                         <span>
-                            {% if exam.difficulty == 'easy' %}سهل
-                            {% elif exam.difficulty == 'medium' %}متوسط
-                            {% else %}صعب{% endif %}
+                            {% if exam.difficulty == 'easy' %}{{ _('سهل') }}
+                            {% elif exam.difficulty == 'medium' %}{{ _('متوسط') }}
+                            {% else %}{{ _('صعب') }}{% endif %}
                         </span>
                     </div>
                     <div class="exam-info-item">
@@ -217,12 +217,12 @@
                 <div class="exam-actions">
                     <a href="{{ url_for('view_exam', exam_id=exam.id) }}" class="btn btn-secondary btn-sm">
                         <i class="fas fa-eye"></i>
-                        <span>عرض</span>
+                        <span>{{ _('عرض') }}</span>
                     </a>
-                    <form method="POST" action="{{ url_for('delete_exam', exam_id=exam.id) }}" style="display: inline;" onsubmit="return confirm('هل أنت متأكد من حذف هذا الاختبار؟')">
+                    <form method="POST" action="{{ url_for('delete_exam', exam_id=exam.id) }}" style="display: inline;" onsubmit="return confirm('{{ _('هل أنت متأكد من حذف هذا الاختبار؟') }}')">
                         <button type="submit" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash"></i>
-                            <span>حذف</span>
+                            <span>{{ _('حذف') }}</span>
                         </button>
                     </form>
                 </div>
@@ -233,8 +233,8 @@
     {% else %}
     <div class="empty-state">
         <i class="fas fa-inbox"></i>
-        <h3>لا توجد اختبارات بعد</h3>
-        <p>ابدأ بإنشاء أول اختبار ذكي لك الآن!</p>
+        <h3>{{ _('لا توجد اختبارات بعد') }}</h3>
+        <p>{{ _('ابدأ بإنشاء أول اختبار ذكي لك الآن!') }}</p>
     </div>
     {% endif %}
 </div>
@@ -245,8 +245,8 @@
         <div class="loading-icon">
             <div class="loading-spinner-large"></div>
         </div>
-        <h2 class="loading-title">جاري إنشاء الاختبار بذكاء...</h2>
-        <div class="loading-message" id="loadingMessage">يتم الآن رفع وتحليل الملفات</div>
+        <h2 class="loading-title">{{ _('جاري إنشاء الاختبار بذكاء...') }}</h2>
+        <div class="loading-message" id="loadingMessage">{{ _('يتم الآن رفع وتحليل الملفات') }}</div>
         
         <div class="progress-bar-container">
             <div class="progress-bar-fill" id="progressBar"></div>
@@ -255,21 +255,21 @@
         <div class="progress-steps">
             <div class="progress-step active" id="step1">
                 <div class="step-icon"><i class="fas fa-file-upload"></i></div>
-                <span>رفع الملفات</span>
+                <span>{{ _('رفع الملفات') }}</span>
             </div>
             <div class="progress-step" id="step2">
                 <div class="step-icon"><i class="fas fa-brain"></i></div>
-                <span>تحليل وصياغة</span>
+                <span>{{ _('تحليل وصياغة') }}</span>
             </div>
             <div class="progress-step" id="step3">
                 <div class="step-icon"><i class="fas fa-check"></i></div>
-                <span>تجهيز الاختبار</span>
+                <span>{{ _('تجهيز الاختبار') }}</span>
             </div>
         </div>
-        <p class="loading-hint">يرجى الانتظار وعدم إغلاق الصفحة، قد يستغرق الأمر دقيقة تقريباً.</p>
+        <p class="loading-hint">{{ _('يرجى الانتظار وعدم إغلاق الصفحة، قد يستغرق الأمر دقيقة تقريباً.') }}</p>
         
         <button type="button" class="btn btn-secondary" id="cancelLoadingBtn" style="margin-top: 25px; padding: 10px 25px; font-size: 0.95rem;">
-            <i class="fas fa-times"></i> إلغاء العملية
+            <i class="fas fa-times"></i> {{ _('إلغاء العملية') }}
         </button>
     </div>
 </div>
@@ -342,7 +342,7 @@ uploadForm.addEventListener('submit', async function(e) {
         step1.classList.remove('active');
         step1.classList.add('completed');
         step2.classList.add('active');
-        loadingMessage.textContent = 'يقوم الذكاء الاصطناعي الآن بصياغة الأسئلة بعناية...';
+        loadingMessage.textContent = '{{ _("يقوم الذكاء الاصطناعي الآن بصياغة الأسئلة بعناية...") }}';
     }, 2000);
     
     try {
@@ -358,19 +358,19 @@ uploadForm.addEventListener('submit', async function(e) {
         step2.classList.remove('active');
         step2.classList.add('completed');
         step3.classList.add('active');
-        loadingMessage.textContent = 'تم تجهيز الاختبار بنجاح! جاري التوجيه...';
+        loadingMessage.textContent = '{{ _("تم تجهيز الاختبار بنجاح! جاري التوجيه...") }}';
         
         if (data.success) {
             setTimeout(() => {
                 window.location.href = data.redirect;
             }, 1000);
         } else {
-            alert('خطأ: ' + (data.error || 'حدث خطأ غير متوقع'));
+            alert('{{ _("خطأ:") }} ' + (data.error || '{{ _("حدث خطأ غير متوقع") }}'));
             loadingOverlay.style.display = 'none';
             generateBtn.disabled = false;
         }
     } catch (error) {
-        alert('حدث خطأ في الاتصال: ' + error.message);
+        alert('{{ _("حدث خطأ في الاتصال:") }} ' + error.message);
         loadingOverlay.style.display = 'none';
         generateBtn.disabled = false;
     }

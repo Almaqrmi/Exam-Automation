@@ -1,0 +1,107 @@
+import polib
+
+def translate_po():
+    po = polib.pofile('translations/en/LC_MESSAGES/messages.po')
+    translations = {
+        "المولّد الذكي للاختبارات": "Smart Exam Generator",
+        "الرئيسية": "Home",
+        "تسجيل الخروج": "Logout",
+        "المولّد الذكي للاختبارات مدعوم بنموذج": "Smart Exam Generator powered by",
+        "Developed & Powered By": "Developed & Powered By",
+        "مرحباً،": "Welcome,",
+        "جاهز لإنشاء اختبار ذكي جديد؟": "Ready to create a new smart exam?",
+        "إنشاء اختبار جديد": "Create New Exam",
+        "ارفع ملف PDF واختر الإعدادات لتوليد الأسئلة تلقائياً": "Upload a PDF and configure settings to generate questions automatically",
+        "ملفات pdf - يدعم ملفات متعددة (5 ملفات كحد أقصى)": "PDF Files - Multiple files supported (Max 5)",
+        "اختر ملفات PDF أو اسحبها هنا": "Choose PDF files or drag them here",
+        "كحد أقصى 5 ملفات • 16 ميجابايت لكل ملف": "Max 5 files • 16MB each",
+        "عنوان الاختبار": "Exam Title",
+        "مثال: اختبار الفصل الأول": "e.g. First Semester Exam",
+        "دكتور المادة": "Course Instructor",
+        "مثال: د. أحمد": "e.g. Dr. Ahmed",
+        "عدد النماذج": "Number of Versions",
+        "نموذج واحد": "One Version",
+        "نموذجين": "Two Versions",
+        "شعار الجامعه (اختياري)": "University Logo (Optional)",
+        "أضف شعار": "Add Logo",
+        "عدد الأسئلة": "Number of Questions",
+        "نوع الأسئلة": "Question Type",
+        "منوع (جميع الأنواع)": "Mixed (All Types)",
+        "اختيار من متعدد": "Multiple Choice",
+        "صح أو خطأ": "True / False",
+        "أكمل الفراغ": "Fill in the Blanks",
+        "أسئلة مباشرة": "Direct Questions",
+        "مستوى الصعوبة": "Difficulty Level",
+        "سهل": "Easy",
+        "متوسط": "Medium",
+        "صعب": "Hard",
+        "مع الإجابة": "Show Answers",
+        "توليد الاختبار": "Generate Exam",
+        "الاختبارات السابقة": "Previous Exams",
+        "سؤال": "Question",
+        "منوع": "Mixed",
+        "اختيار متعدد": "Multiple Choice",
+        "صح/خطأ": "True/False",
+        "مباشرة": "Direct",
+        "عرض": "View",
+        "حذف": "Delete",
+        "هل أنت متأكد من حذف هذا الاختبار؟": "Are you sure you want to delete this exam?",
+        "لا توجد اختبارات بعد": "No exams yet",
+        "ابدأ بإنشاء أول اختبار ذكي لك الآن!": "Start creating your first smart exam now!",
+        "جاري إنشاء الاختبار بذكاء...": "Generating exam smartly...",
+        "يتم الآن رفع وتحليل الملفات": "Uploading and analyzing files now",
+        "رفع الملفات": "Uploading files",
+        "تحليل وصياغة": "Analysis & Drafting",
+        "تجهيز الاختبار": "Preparing Exam",
+        "يرجى الانتظار وعدم إغلاق الصفحة، قد يستغرق الأمر دقيقة تقريباً.": "Please wait and do not close the page, this may take about a minute.",
+        "إلغاء العملية": "Cancel Process",
+        "يقوم الذكاء الاصطناعي الآن بصياغة الأسئلة بعناية...": "AI is now carefully drafting questions...",
+        "تم تجهيز الاختبار بنجاح! جاري التوجيه...": "Exam prepared successfully! Redirecting...",
+        "خطأ:": "Error:",
+        "حدث خطأ غير متوقع": "An unexpected error occurred",
+        "حدث خطأ في الاتصال:": "A connection error occurred:",
+        "تسجيل الدخول - المولّد الذكي للاختبارات": "Login - Smart Exam Generator",
+        "مرحباً بعودتك": "Welcome Back",
+        "سجّل دخولك للوصول إلى حسابك": "Log in to access your account",
+        "اسم المستخدم": "Username",
+        "أدخل اسم المستخدم": "Enter your username",
+        "كلمة المرور": "Password",
+        "أدخل كلمة المرور": "Enter your password",
+        "تسجيل الدخول": "Login",
+        "ليس لديك حساب؟": "Don't have an account?",
+        "سجّل الآن": "Register now",
+        "إنشاء حساب - المولّد الذكي للاختبارات": "Register - Smart Exam Generator",
+        "إنشاء حساب جديد": "Create New Account",
+        "انضم إلينا وابدأ في توليد اختباراتك الذكية": "Join us and start generating your smart exams",
+        "الاسم الكامل": "Full Name",
+        "أدخل اسمك الكامل": "Enter your full name",
+        "اختر اسم مستخدم": "Choose a username",
+        "البريد الإلكتروني": "Email Address",
+        "example@domain.com": "example@domain.com",
+        "أدخل كلمة مرور قوية": "Enter a strong password",
+        "إنشاء الحساب": "Create Account",
+        "لديك حساب بالفعل؟": "Already have an account?",
+        "سجّل دخولك": "Log in",
+        "العودة إلى لوحة التحكم": "Back to Dashboard",
+        "تصدير الاختبار كملف Word": "Export Exam as Word Document",
+        "تصدير Word": "Export Word",
+        "تصدير الاختبار كملف PDF": "Export Exam as PDF",
+        "تصدير PDF": "Export PDF",
+        "السؤال": "Question",
+        "سؤال مباشر": "Direct Question",
+        "الإجابة الصحيحة:": "Correct Answer:",
+        "نصيحة: يمكنك تصدير الاختبار الى ملف word إذا كنت تريده اختبارأ جاهزاً للطلاب أو للتعديل عليه.": "Tip: You can export the exam to a Word file if you want a ready-to-print exam for students or to edit it further."
+    }
+    
+    for entry in po:
+        if entry.msgid in translations:
+            entry.msgstr = translations[entry.msgid]
+        else:
+            print(f"Warning: No translation found for '{entry.msgid}'")
+            entry.msgstr = entry.msgid
+            
+    po.save('translations/en/LC_MESSAGES/messages.po')
+    print("Translations applied successfully.")
+
+if __name__ == '__main__':
+    translate_po()

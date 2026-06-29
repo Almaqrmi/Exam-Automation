@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file, session
+from flask_babel import Babel, gettext as _
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -31,6 +32,18 @@ from reportlab.lib.enums import TA_LEFT
 app = Flask(__name__)
 app.config.from_object(Config)
 Config.init_app(app)
+
+def get_locale():
+    return session.get('lang', 'ar')
+
+babel = Babel(app, locale_selector=get_locale)
+
+# مسار لتغيير اللغة
+@app.route('/set_language/<lang>')
+def set_language(lang):
+    if lang in app.config.get('LANGUAGES', ['ar', 'en']):
+        session['lang'] = lang
+    return redirect(request.referrer or url_for('dashboard'))
 
 # إضافة فلتر from_json لـ Jinja2
 @app.template_filter('from_json')

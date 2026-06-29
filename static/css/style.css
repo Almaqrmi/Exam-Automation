@@ -1179,6 +1179,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    
 }
 
 .logo-upload-btn {
@@ -1241,3 +1242,91 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* LTR Specific Styles for English Interface */
+[dir="ltr"] body {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+[dir="ltr"] .nav-brand i {
+    margin-right: 10px;
+    margin-left: 0;
+}
+[dir="ltr"] .form-group label i {
+    margin-right: 8px;
+    margin-left: 0;
+}
+[dir="ltr"] .btn i {
+    margin-right: 8px;
+    margin-left: 0;
+}
+[dir="ltr"] .exam-info-item i {
+    margin-right: 8px;
+    margin-left: 0;
+}
+[dir="ltr"] .meta-badge i {
+    margin-right: 6px;
+    margin-left: 0;
+}
+[dir="ltr"] .exam-result-title i {
+    margin-right: 15px;
+    margin-left: 0;
+}
+[dir="ltr"] .back-link i {
+    margin-right: 8px;
+    margin-left: 0;
+}
+[dir="ltr"] .flash i {
+    margin-right: 15px;
+    margin-left: 0;
+}
+[dir="ltr"] .step-icon i {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+/* Language Dropdown Styles */
+.lang-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.lang-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--card-bg);
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    overflow: hidden;
+    right: 0;
+    border: 1px solid var(--border-color);
+}
+
+[dir="ltr"] .lang-dropdown-content {
+    right: auto;
+    left: 0;
+}
+
+.lang-dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.lang-dropdown-content a:hover {
+    background-color: var(--bg-color);
+}
+
+.lang-dropdown-content a.active {
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: var(--bg-color);
+}
+
+.lang-dropdown:hover .lang-dropdown-content {
+    display: block;
+}

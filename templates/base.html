@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="{{ session.get('lang', 'ar') }}" dir="{{ 'rtl' if session.get('lang', 'ar') == 'ar' else 'ltr' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}المولّد الذكي للاختبارات{% endblock %}</title>
+    <title>{% block title %}{{ _('المولّد الذكي للاختبارات') }}{% endblock %}</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,22 +24,33 @@
         <div class="container">
             <div class="nav-brand">
                 <i class="fas fa-graduation-cap"></i>
-                <span>المولّد الذكي للاختبارات</span>
+                <span>{{ _('المولّد الذكي للاختبارات') }}</span>
             </div>
-            
+            <div class="nav-lang lang-dropdown">
+                   <button class="nav-link" style="background:none; border:none; cursor:pointer; padding: 0.5rem; margin-right:5px ;">
+                       <i class="fas fa-globe" style="font-size: 1.2rem; margin: 0; color: var(--text-color);"></i>
+                   </button>
+                   <div class="lang-dropdown-content">
+                       <a href="{{ url_for('set_language', lang='ar') }}" class="{% if session.get('lang', 'ar') == 'ar' %}active{% endif %}">العربية</a>
+                       <a href="{{ url_for('set_language', lang='en') }}" class="{% if session.get('lang', 'ar') == 'en' %}active{% endif %}">English</a>
+                   </div>
+               
+            </div>
             {% if current_user.is_authenticated %}
             <div class="nav-menu">
                 <a href="{{ url_for('dashboard') }}" class="nav-link">
                     <i class="fas fa-home"></i>
-                    <span>الرئيسية</span>
+                    <span>{{ _('الرئيسية') }}</span>
                 </a>
                 <div class="nav-user">
                     <i class="fas fa-user-circle"></i>
                     <span>{{ current_user.username }}</span>
                 </div>
+                <!-- Language Toggle -->
+               
                 <a href="{{ url_for('logout') }}" class="nav-link logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>تسجيل الخروج</span>
+                    <span>{{ _('تسجيل الخروج') }}</span>
                 </a>
             </div>
             {% endif %}
@@ -71,8 +82,8 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p> المولّد الذكي للاختبارات مدعوم بنموذج <span>Gemini AI</span></p>
-            Developed & Powered By
+            <p>{{ _('المولّد الذكي للاختبارات مدعوم بنموذج') }} <span>Gemini AI</span></p>
+            {{ _('Developed & Powered By') }}
             <a href="https://almaqrmi-portfolio.pages.dev/" target="_blank">Mohammed Almaqrmi © 2026</a>
         </div>
     </footer>
