@@ -48,20 +48,44 @@
                     <div id="filesList" class="files-list"></div>
                 </div>
 
-                <!-- Exam Title -->
-                <div class="form-group">
-                    <label for="exam_title">
-                        <i class="fas fa-heading"></i>
-                        عنوان الاختبار
-                    </label>
-                    <input 
-                        type="text" 
-                        id="exam_title" 
-                        name="exam_title" 
-                        class="form-input" 
-                        placeholder="مثال: اختبار الفصل الأول - مقدمة في البرمجة"
-                        required
-                    >
+                <!-- Top Row: Title, Teacher, Versions -->
+                <div class="settings-grid">
+                    <!-- Exam Title -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="exam_title">
+                            <i class="fas fa-heading"></i>
+                            عنوان الاختبار
+                        </label>
+                        <input 
+                            type="text" 
+                            id="exam_title" 
+                            name="exam_title" 
+                            class="form-input" 
+                            placeholder="مثال: اختبار الفصل الأول"
+                            required
+                        >
+                    </div>
+
+                    <!-- Teacher Name -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="teacher_name">
+                            <i class="fas fa-user-tie"></i>
+                            اسم دكتور المادة
+                        </label>
+                        <input type="text" id="teacher_name" name="teacher_name" class="form-input" placeholder="مثال: د. أحمد">
+                    </div>
+
+                    <!-- Number of Versions -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="num_versions">
+                            <i class="fas fa-copy"></i>
+                            عدد النماذج
+                        </label>
+                        <select id="num_versions" name="num_versions" class="form-input">
+                            <option value="1" selected>نموذج واحد</option>
+                            <option value="2">نموذجين</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Settings Grid -->
@@ -111,20 +135,21 @@
                             <option value="hard">صعب</option>
                         </select>
                     </div>
+                    <!-- Show Answers Toggle -->
+                    <label class="toggle-label">
+                        <input type="checkbox" name="show_answers" id="show_answers">
+                        <div class="toggle-switch"></div>
+                        <span>مع الإجابة</span>
+                    </label>
                 </div>
 
+
+
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary btn-lg" id="generateBtn">
+                <button type="submit" class="btn btn-primary btn-lg" id="generateBtn" style="margin-top: 10px;">
                     <i class="fas fa-magic"></i>
                     <span>توليد الاختبار</span>
                 </button>
-
-                <!-- Loading State -->
-                <div id="loadingState" class="loading-state" style="display: none;">
-                    <div class="loading-spinner"></div>
-                    <p>جاري تحليل الملف وتوليد الأسئلة...</p>
-                    <small>قد يستغرق هذا بضع دقائق</small>
-                </div>
             </form>
         </div>
     </div>
@@ -198,6 +223,41 @@
     </div>
     {% endif %}
 </div>
+
+<!-- New Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay" style="display: none;">
+    <div class="loading-card">
+        <div class="loading-icon">
+            <div class="loading-spinner-large"></div>
+        </div>
+        <h2 class="loading-title">جاري إنشاء الاختبار بذكاء...</h2>
+        <div class="loading-message" id="loadingMessage">يتم الآن رفع وتحليل الملفات</div>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        
+        <div class="progress-steps">
+            <div class="progress-step active" id="step1">
+                <div class="step-icon"><i class="fas fa-file-upload"></i></div>
+                <span>رفع الملفات</span>
+            </div>
+            <div class="progress-step" id="step2">
+                <div class="step-icon"><i class="fas fa-brain"></i></div>
+                <span>تحليل وصياغة</span>
+            </div>
+            <div class="progress-step" id="step3">
+                <div class="step-icon"><i class="fas fa-check"></i></div>
+                <span>تجهيز الاختبار</span>
+            </div>
+        </div>
+        <p class="loading-hint">يرجى الانتظار وعدم إغلاق الصفحة، قد يستغرق الأمر دقيقة تقريباً.</p>
+        
+        <button type="button" class="btn btn-secondary" id="cancelLoadingBtn" style="margin-top: 25px; padding: 10px 25px; font-size: 0.95rem;">
+            <i class="fas fa-times"></i> إلغاء العملية
+        </button>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -215,16 +275,41 @@ fileInput.addEventListener('change', function(e) {
 // معالجة إرسال النموذج
 const uploadForm = document.getElementById('uploadForm');
 const generateBtn = document.getElementById('generateBtn');
-const loadingState = document.getElementById('loadingState');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingMessage = document.getElementById('loadingMessage');
+const progressBar = document.getElementById('progressBar');
+const step1 = document.getElementById('step1');
+const step2 = document.getElementById('step2');
+const step3 = document.getElementById('step3');
 
 uploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();
-    
     const formData = new FormData(uploadForm);
     
-    // إخفاء الزر وإظهار حالة التحميل
-    generateBtn.style.display = 'none';
-    loadingState.style.display = 'block';
+    // إظهار شاشة التحميل الاحترافية
+    loadingOverlay.style.display = 'flex';
+    generateBtn.disabled = true;
+    
+    // إعداد زر الإلغاء
+    const cancelLoadingBtn = document.getElementById('cancelLoadingBtn');
+    cancelLoadingBtn.onclick = () => {
+        loadingOverlay.style.display = 'none';
+        generateBtn.disabled = false;
+        // تحديث الصفحة لإنهاء أي عمليات معلقة
+        window.location.reload();
+    };
+    
+    // Step 1: Uploading
+    progressBar.style.width = '20%';
+    
+    // Simulate progression to Step 2 (Analysis)
+    setTimeout(() => {
+        progressBar.style.width = '60%';
+        step1.classList.remove('active');
+        step1.classList.add('completed');
+        step2.classList.add('active');
+        loadingMessage.textContent = 'يقوم الذكاء الاصطناعي الآن بصياغة الأسئلة بعناية...';
+    }, 2000);
     
     try {
         const response = await fetch('{{ url_for("generate_exam") }}', {
@@ -234,17 +319,26 @@ uploadForm.addEventListener('submit', async function(e) {
         
         const data = await response.json();
         
+        // Step 3: Done
+        progressBar.style.width = '100%';
+        step2.classList.remove('active');
+        step2.classList.add('completed');
+        step3.classList.add('active');
+        loadingMessage.textContent = 'تم تجهيز الاختبار بنجاح! جاري التوجيه...';
+        
         if (data.success) {
-            window.location.href = data.redirect;
+            setTimeout(() => {
+                window.location.href = data.redirect;
+            }, 1000);
         } else {
             alert('خطأ: ' + (data.error || 'حدث خطأ غير متوقع'));
-            generateBtn.style.display = 'flex';
-            loadingState.style.display = 'none';
+            loadingOverlay.style.display = 'none';
+            generateBtn.disabled = false;
         }
     } catch (error) {
         alert('حدث خطأ في الاتصال: ' + error.message);
-        generateBtn.style.display = 'flex';
-        loadingState.style.display = 'none';
+        loadingOverlay.style.display = 'none';
+        generateBtn.disabled = false;
     }
 });
 </script>

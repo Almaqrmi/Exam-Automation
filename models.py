@@ -44,6 +44,10 @@ class Exam(db.Model):
     num_questions = db.Column(db.Integer, default=10)
     question_type = db.Column(db.String(50))  # 'mixed', 'mcq', 'tf', 'fill', 'direct'
     difficulty = db.Column(db.String(20))     # 'easy', 'medium', 'hard'
+    show_answers = db.Column(db.Boolean, default=False)       # تصدير مع الإجابات
+    teacher_name = db.Column(db.String(150))                  # اسم دكتور المادة
+    num_versions = db.Column(db.Integer, default=1)           # عدد النماذج (1 أو 2)
+    school_logo = db.Column(db.String(255))                   # مسار شعار المؤسسة
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # مفتاح خارجي للمستخدم

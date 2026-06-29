@@ -11,12 +11,12 @@
                 <i class="fas fa-arrow-right"></i>
                 العودة إلى لوحة التحكم
             </a>
-            
+
             <h1 class="exam-result-title">
                 <i class="fas fa-check-circle"></i>
                 {{ exam.title }}
             </h1>
-            
+
             <div class="exam-result-meta">
                 <span class="meta-badge">
                     <i class="fas fa-list"></i>
@@ -49,24 +49,19 @@
                 {% endif %}
             </div>
         </div>
-        
+
         <div class="exam-result-actions">
-            <button onclick="window.print()" class="btn btn-secondary">
-                <i class="fas fa-print"></i>
-                <span>طباعة</span>
-            </button>
-            <a href="{{ url_for('export_word', exam_id=exam.id) }}" class="btn btn-secondary">
+            <a href="{{ url_for('export_word', exam_id=exam.id) }}" class="btn btn-word btn-secondary"
+                title="تصدير الاختبار كملف Word">
                 <i class="fas fa-file-word"></i>
                 <span>تصدير Word</span>
             </a>
-            <a href="{{ url_for('export_pdf', exam_id=exam.id) }}" class="btn btn-secondary">
+            <a href="{{ url_for('export_pdf', exam_id=exam.id) }}" class="btn btn-secondary"
+                title="تصدير الاختبار كملف PDF">
                 <i class="fas fa-file-pdf"></i>
                 <span>تصدير PDF</span>
             </a>
-            <button onclick="copyQuestions()" class="btn btn-secondary">
-                <i class="fas fa-copy"></i>
-                <span>نسخ الأسئلة</span>
-            </button>
+
         </div>
     </div>
 
@@ -78,20 +73,20 @@
                 <div class="question-number">السؤال {{ loop.index }}</div>
                 <div class="question-type-badge {{ question.question_type }}">
                     {% if question.question_type == 'mcq' %}
-                        <i class="fas fa-list-ul"></i> اختيار متعدد
+                    <i class="fas fa-list-ul"></i> اختيار متعدد
                     {% elif question.question_type == 'tf' %}
-                        <i class="fas fa-check-double"></i> صح/خطأ
+                    <i class="fas fa-check-double"></i> صح/خطأ
                     {% elif question.question_type == 'fill' %}
-                        <i class="fas fa-pen"></i> أكمل الفراغ
+                    <i class="fas fa-pen"></i> أكمل الفراغ
                     {% else %}
-                        <i class="fas fa-question"></i> سؤال مباشر
+                    <i class="fas fa-question"></i> سؤال مباشر
                     {% endif %}
                 </div>
             </div>
-            
+
             <div class="question-content">
                 <p class="question-text">{{ question.question_text }}</p>
-                
+
                 {% if question.question_type == 'mcq' and question.options %}
                 <div class="question-options">
                     {% for option in question.options %}
@@ -105,7 +100,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                
+
                 <div class="question-answer">
                     <strong>
                         <i class="fas fa-lightbulb"></i>
@@ -121,34 +116,8 @@
     <!-- Print Instructions -->
     <div class="print-instructions">
         <i class="fas fa-info-circle"></i>
-        <p>نصيحة: يمكنك طباعة هذه الصفحة أو حفظها كملف PDF من خلال متصفحك</p>
+        <p>نصيحة: يمكنك تصدير الاختبار الى ملف word إذا كنت تريده اختبارأ جاهزاً للطلاب أو للتعديل عليه. </p>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-function copyQuestions() {
-    let text = '{{ exam.title }}\n';
-    text += '='.repeat(50) + '\n\n';
-    
-    {% for question in questions %}
-    text += 'السؤال {{ loop.index }}: {{ question.question_text }}\n';
-    
-    {% if question.question_type == 'mcq' and question.options %}
-    {% for option in question.options %}
-    text += '{{ loop.index }}. {{ option }}\n';
-    {% endfor %}
-    {% endif %}
-    
-    text += 'الإجابة: {{ question.correct_answer }}\n\n';
-    {% endfor %}
-    
-    navigator.clipboard.writeText(text).then(() => {
-        alert('تم نسخ الأسئلة بنجاح!');
-    }).catch(err => {
-        alert('حدث خطأ أثناء النسخ');
-    });
-}
-</script>
-{% endblock %}
