@@ -711,6 +711,7 @@ def export_pdf(exam_id):
 
 # إنشاء الجداول عند التشغيل لأول مرة
 with app.app_context():
+    print("DATABASE_URL =", app.config["SQLALCHEMY_DATABASE_URI"])
     db.create_all()
 
 
