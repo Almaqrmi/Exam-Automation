@@ -86,6 +86,21 @@
                             <option value="2">نموذجين</option>
                         </select>
                     </div>
+
+                    <!-- School Logo -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>
+                            <i class="fas fa-image"></i>
+                            شعار المؤسسة (اختياري)
+                        </label>
+                        <div class="logo-upload-area">
+                            <label for="school_logo" class="logo-upload-btn">
+                                <i class="fas fa-upload"></i> أضف شعار
+                            </label>
+                            <input type="file" id="school_logo" name="school_logo" accept="image/*" style="display: none;">
+                            <img id="logoPreview" class="logo-preview" alt="Preview">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Settings Grid -->
@@ -281,6 +296,25 @@ const progressBar = document.getElementById('progressBar');
 const step1 = document.getElementById('step1');
 const step2 = document.getElementById('step2');
 const step3 = document.getElementById('step3');
+
+// Logo Preview
+const logoInput = document.getElementById('school_logo');
+const logoPreview = document.getElementById('logoPreview');
+
+if (logoInput && logoPreview) {
+    logoInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoPreview.src = e.target.result;
+                logoPreview.style.display = 'block';
+            }
+            reader.readAsDataURL(this.files[0]);
+        } else {
+            logoPreview.style.display = 'none';
+        }
+    });
+}
 
 uploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();

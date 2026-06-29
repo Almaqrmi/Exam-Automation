@@ -18,9 +18,9 @@ import google.generativeai as genai
 
 # استيراد مكتبات التصدير
 from docx import Document
-from docx.shared import Pt, Inches
+from docx.shared import Pt, Inches, Mm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
@@ -329,6 +329,22 @@ def generate_exam():
         num_versions = int(request.form.get('num_versions', 1))
         teacher_name = request.form.get('teacher_name', '')
         
+        # حفظ الشعار
+        school_logo_path = None
+        if 'school_logo' in request.files:
+            logo_file = request.files['school_logo']
+            if logo_file and logo_file.filename != '':
+                logos_dir = os.path.join(app.config['UPLOAD_FOLDER'], 'logos')
+                os.makedirs(logos_dir, exist_ok=True)
+                
+                logo_filename = secure_filename(logo_file.filename)
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                logo_filename = f"logo_{timestamp}_{logo_filename}"
+                logo_filepath = os.path.join(logos_dir, logo_filename)
+                
+                logo_file.save(logo_filepath)
+                school_logo_path = os.path.join('logos', logo_filename)
+        
         # توليد الأسئلة
         questions_data = generate_questions_with_ai(combined_text, num_questions, question_type, difficulty)
         
@@ -351,6 +367,7 @@ def generate_exam():
             show_answers=show_answers,
             num_versions=num_versions,
             teacher_name=teacher_name,
+            school_logo=school_logo_path,
             user_id=current_user.id
         )
         db.session.add(exam)
@@ -519,6 +536,13 @@ def export_word(exam_id):
                         if sq.get('type') == 'mcq' and sq.get('options'):
                             random.shuffle(sq['options'])
                     
+                    # Check if logo exists
+                    school_logo_image = ''
+                    if getattr(exam, 'school_logo', None):
+                        logo_full_path = os.path.join(app.config['UPLOAD_FOLDER'], exam.school_logo)
+                        if os.path.exists(logo_full_path):
+                            school_logo_image = InlineImage(version_doc, logo_full_path, width=Mm(25))
+                    
                     context = {
                         'exam_title': f"{exam.title} - Model {chr(65+i)}", # Model A, B...
                         'exam_date': exam.created_at.strftime('%Y-%m-%d'),
@@ -527,7 +551,7 @@ def export_word(exam_id):
                         'questions': shuffled_questions,
                         'show_answers': show_answers,
                         'teacher_name': teacher_name,
-                        'teacher': teacher_name # Typo fallback
+                        'school_logo': school_logo_image
                     }
                     version_doc.render(context)
                     
@@ -545,6 +569,13 @@ def export_word(exam_id):
         else:
             doc = DocxTemplate(template_path)
             
+            # Check if logo exists
+            school_logo_image = ''
+            if getattr(exam, 'school_logo', None):
+                logo_full_path = os.path.join(app.config['UPLOAD_FOLDER'], exam.school_logo)
+                if os.path.exists(logo_full_path):
+                    school_logo_image = InlineImage(doc, logo_full_path, width=Mm(25))
+            
             # Prepare context
             context = {
                 'exam_title': exam.title,
@@ -554,7 +585,7 @@ def export_word(exam_id):
                 'questions': questions_data,
                 'show_answers': show_answers,
                 'teacher_name': teacher_name,
-                'teacher': teacher_name # Typo fallback
+                'school_logo': school_logo_image
             }
             
             # Render template
