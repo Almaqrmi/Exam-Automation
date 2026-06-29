@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ exam.title }} - المولّد الذكي للاختبارات{% endblock %}
+{% block title %}{{ exam.title }} - {{ _('المولّد الذكي للاختبارات') }}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -9,7 +9,7 @@
         <div class="exam-result-info">
             <a href="{{ url_for('dashboard') }}" class="back-link">
                 <i class="fas fa-arrow-right"></i>
-                العودة إلى لوحة التحكم
+                {{ _('العودة إلى لوحة التحكم') }}
             </a>
 
             <h1 class="exam-result-title">
@@ -20,21 +20,21 @@
             <div class="exam-result-meta">
                 <span class="meta-badge">
                     <i class="fas fa-list"></i>
-                    {{ exam.num_questions }} سؤال
+                    {{ exam.num_questions }} {{ _('سؤال') }}
                 </span>
                 <span class="meta-badge">
                     <i class="fas fa-layer-group"></i>
-                    {% if exam.question_type == 'mixed' %}منوع
-                    {% elif exam.question_type == 'mcq' %}اختيار متعدد
-                    {% elif exam.question_type == 'tf' %}صح/خطأ
-                    {% elif exam.question_type == 'fill' %}أكمل الفراغ
-                    {% else %}مباشرة{% endif %}
+                    {% if exam.question_type == 'mixed' %}{{ _('منوع') }}
+                    {% elif exam.question_type == 'mcq' %}{{ _('اختيار متعدد') }}
+                    {% elif exam.question_type == 'tf' %}{{ _('صح/خطأ') }}
+                    {% elif exam.question_type == 'fill' %}{{ _('أكمل الفراغ') }}
+                    {% else %}{{ _('مباشرة') }}{% endif %}
                 </span>
                 <span class="meta-badge">
                     <i class="fas fa-signal"></i>
-                    {% if exam.difficulty == 'easy' %}سهل
-                    {% elif exam.difficulty == 'medium' %}متوسط
-                    {% else %}صعب{% endif %}
+                    {% if exam.difficulty == 'easy' %}{{ _('سهل') }}
+                    {% elif exam.difficulty == 'medium' %}{{ _('متوسط') }}
+                    {% else %}{{ _('صعب') }}{% endif %}
                 </span>
                 <span class="meta-badge">
                     <i class="fas fa-calendar"></i>
@@ -52,14 +52,14 @@
 
         <div class="exam-result-actions">
             <a href="{{ url_for('export_word', exam_id=exam.id) }}" class="btn btn-word btn-secondary"
-                title="تصدير الاختبار كملف Word">
+                title="{{ _('تصدير الاختبار كملف Word') }}">
                 <i class="fas fa-file-word"></i>
-                <span>تصدير Word</span>
+                <span>{{ _('تصدير Word') }}</span>
             </a>
             <a href="{{ url_for('export_pdf', exam_id=exam.id) }}" class="btn btn-secondary"
-                title="تصدير الاختبار كملف PDF">
+                title="{{ _('تصدير الاختبار كملف PDF') }}">
                 <i class="fas fa-file-pdf"></i>
-                <span>تصدير PDF</span>
+                <span>{{ _('تصدير PDF') }}</span>
             </a>
 
         </div>
@@ -70,16 +70,16 @@
         {% for question in questions %}
         <div class="question-card" data-type="{{ question.question_type }}">
             <div class="question-header">
-                <div class="question-number">السؤال {{ loop.index }}</div>
+                <div class="question-number">{{ _('السؤال') }} {{ loop.index }}</div>
                 <div class="question-type-badge {{ question.question_type }}">
                     {% if question.question_type == 'mcq' %}
-                    <i class="fas fa-list-ul"></i> اختيار متعدد
+                    <i class="fas fa-list-ul"></i> {{ _('اختيار متعدد') }}
                     {% elif question.question_type == 'tf' %}
-                    <i class="fas fa-check-double"></i> صح/خطأ
+                    <i class="fas fa-check-double"></i> {{ _('صح/خطأ') }}
                     {% elif question.question_type == 'fill' %}
-                    <i class="fas fa-pen"></i> أكمل الفراغ
+                    <i class="fas fa-pen"></i> {{ _('أكمل الفراغ') }}
                     {% else %}
-                    <i class="fas fa-question"></i> سؤال مباشر
+                    <i class="fas fa-question"></i> {{ _('سؤال مباشر') }}
                     {% endif %}
                 </div>
             </div>
@@ -104,7 +104,7 @@
                 <div class="question-answer">
                     <strong>
                         <i class="fas fa-lightbulb"></i>
-                        الإجابة الصحيحة:
+                        {{ _('الإجابة الصحيحة:') }}
                     </strong>
                     <span class="answer-text">{{ question.correct_answer }}</span>
                 </div>
@@ -116,7 +116,7 @@
     <!-- Print Instructions -->
     <div class="print-instructions">
         <i class="fas fa-info-circle"></i>
-        <p>نصيحة: يمكنك تصدير الاختبار الى ملف word إذا كنت تريده اختبارأ جاهزاً للطلاب أو للتعديل عليه. </p>
+        <p>{{ _('نصيحة: يمكنك تصدير الاختبار الى ملف word إذا كنت تريده اختبارأ جاهزاً للطلاب أو للتعديل عليه.') }}</p>
     </div>
 </div>
 {% endblock %}

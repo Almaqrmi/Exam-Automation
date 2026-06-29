@@ -1,0 +1,379 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-06-30 01:27+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: templates/base.html:6 templates/base.html:27 templates/results.html:3
+msgid "المولّد الذكي للاختبارات"
+msgstr ""
+
+#: templates/base.html:34
+msgid "الرئيسية"
+msgstr ""
+
+#: templates/base.html:50
+msgid "تسجيل الخروج"
+msgstr ""
+
+#: templates/base.html:82
+msgid "المولّد الذكي للاختبارات مدعوم بنموذج"
+msgstr ""
+
+#: templates/base.html:83
+msgid "Developed & Powered By"
+msgstr ""
+
+#: templates/dashboard.html:11
+msgid "مرحباً،"
+msgstr ""
+
+#: templates/dashboard.html:13
+msgid "جاهز لإنشاء اختبار ذكي جديد؟"
+msgstr ""
+
+#: templates/dashboard.html:21
+msgid "إنشاء اختبار جديد"
+msgstr ""
+
+#: templates/dashboard.html:22
+msgid "ارفع ملف PDF واختر الإعدادات لتوليد الأسئلة تلقائياً"
+msgstr ""
+
+#: templates/dashboard.html:30
+msgid "ملفات pdf - يدعم ملفات متعددة (5 ملفات كحد أقصى)"
+msgstr ""
+
+#: templates/dashboard.html:44
+msgid "اختر ملفات PDF أو اسحبها هنا"
+msgstr ""
+
+#: templates/dashboard.html:45
+msgid "كحد أقصى 5 ملفات • 16 ميجابايت لكل ملف"
+msgstr ""
+
+#: templates/dashboard.html:57
+msgid "عنوان الاختبار"
+msgstr ""
+
+#: templates/dashboard.html:64
+msgid "مثال: اختبار الفصل الأول"
+msgstr ""
+
+#: templates/dashboard.html:73
+msgid "دكتور المادة"
+msgstr ""
+
+#: templates/dashboard.html:75
+msgid "مثال: د. أحمد"
+msgstr ""
+
+#: templates/dashboard.html:82
+msgid "عدد النماذج"
+msgstr ""
+
+#: templates/dashboard.html:85
+msgid "نموذج واحد"
+msgstr ""
+
+#: templates/dashboard.html:86
+msgid "نموذجين"
+msgstr ""
+
+#: templates/dashboard.html:94
+msgid "شعار الجامعه (اختياري)"
+msgstr ""
+
+#: templates/dashboard.html:98
+msgid "أضف شعار"
+msgstr ""
+
+#: templates/dashboard.html:112
+msgid "عدد الأسئلة"
+msgstr ""
+
+#: templates/dashboard.html:130
+msgid "نوع الأسئلة"
+msgstr ""
+
+#: templates/dashboard.html:133
+msgid "منوع (جميع الأنواع)"
+msgstr ""
+
+#: templates/dashboard.html:134
+msgid "اختيار من متعدد"
+msgstr ""
+
+#: templates/dashboard.html:135
+msgid "صح أو خطأ"
+msgstr ""
+
+#: templates/dashboard.html:136 templates/dashboard.html:199
+#: templates/results.html:30 templates/results.html:80
+msgid "أكمل الفراغ"
+msgstr ""
+
+#: templates/dashboard.html:137
+msgid "أسئلة مباشرة"
+msgstr ""
+
+#: templates/dashboard.html:145
+msgid "مستوى الصعوبة"
+msgstr ""
+
+#: templates/dashboard.html:148 templates/dashboard.html:206
+#: templates/results.html:35
+msgid "سهل"
+msgstr ""
+
+#: templates/dashboard.html:149 templates/dashboard.html:207
+#: templates/results.html:36
+msgid "متوسط"
+msgstr ""
+
+#: templates/dashboard.html:150 templates/dashboard.html:208
+#: templates/results.html:37
+msgid "صعب"
+msgstr ""
+
+#: templates/dashboard.html:157
+msgid "مع الإجابة"
+msgstr ""
+
+#: templates/dashboard.html:166
+msgid "توليد الاختبار"
+msgstr ""
+
+#: templates/dashboard.html:177
+msgid "الاختبارات السابقة"
+msgstr ""
+
+#: templates/dashboard.html:191 templates/results.html:23
+msgid "سؤال"
+msgstr ""
+
+#: templates/dashboard.html:196 templates/results.html:27
+msgid "منوع"
+msgstr ""
+
+#: templates/dashboard.html:197 templates/results.html:28
+#: templates/results.html:76
+msgid "اختيار متعدد"
+msgstr ""
+
+#: templates/dashboard.html:198 templates/results.html:29
+#: templates/results.html:78
+msgid "صح/خطأ"
+msgstr ""
+
+#: templates/dashboard.html:200 templates/results.html:31
+msgid "مباشرة"
+msgstr ""
+
+#: templates/dashboard.html:220
+msgid "عرض"
+msgstr ""
+
+#: templates/dashboard.html:222
+msgid "هل أنت متأكد من حذف هذا الاختبار؟"
+msgstr ""
+
+#: templates/dashboard.html:225
+msgid "حذف"
+msgstr ""
+
+#: templates/dashboard.html:236
+msgid "لا توجد اختبارات بعد"
+msgstr ""
+
+#: templates/dashboard.html:237
+msgid "ابدأ بإنشاء أول اختبار ذكي لك الآن!"
+msgstr ""
+
+#: templates/dashboard.html:248
+msgid "جاري إنشاء الاختبار بذكاء..."
+msgstr ""
+
+#: templates/dashboard.html:249
+msgid "يتم الآن رفع وتحليل الملفات"
+msgstr ""
+
+#: templates/dashboard.html:258
+msgid "رفع الملفات"
+msgstr ""
+
+#: templates/dashboard.html:262
+msgid "تحليل وصياغة"
+msgstr ""
+
+#: templates/dashboard.html:266
+msgid "تجهيز الاختبار"
+msgstr ""
+
+#: templates/dashboard.html:269
+msgid "يرجى الانتظار وعدم إغلاق الصفحة، قد يستغرق الأمر دقيقة تقريباً."
+msgstr ""
+
+#: templates/dashboard.html:272
+msgid "إلغاء العملية"
+msgstr ""
+
+#: templates/dashboard.html:345
+msgid "يقوم الذكاء الاصطناعي الآن بصياغة الأسئلة بعناية..."
+msgstr ""
+
+#: templates/dashboard.html:361
+msgid "تم تجهيز الاختبار بنجاح! جاري التوجيه..."
+msgstr ""
+
+#: templates/dashboard.html:368
+msgid "خطأ:"
+msgstr ""
+
+#: templates/dashboard.html:368
+msgid "حدث خطأ غير متوقع"
+msgstr ""
+
+#: templates/dashboard.html:373
+msgid "حدث خطأ في الاتصال:"
+msgstr ""
+
+#: templates/login.html:3
+msgid "تسجيل الدخول - المولّد الذكي للاختبارات"
+msgstr ""
+
+#: templates/login.html:10
+msgid "مرحباً بعودتك"
+msgstr ""
+
+#: templates/login.html:11
+msgid "سجّل دخولك للوصول إلى حسابك"
+msgstr ""
+
+#: templates/login.html:18 templates/register.html:33
+msgid "اسم المستخدم"
+msgstr ""
+
+#: templates/login.html:25
+msgid "أدخل اسم المستخدم"
+msgstr ""
+
+#: templates/login.html:34 templates/register.html:65
+msgid "كلمة المرور"
+msgstr ""
+
+#: templates/login.html:41
+msgid "أدخل كلمة المرور"
+msgstr ""
+
+#: templates/login.html:49
+msgid "تسجيل الدخول"
+msgstr ""
+
+#: templates/login.html:54
+msgid "ليس لديك حساب؟"
+msgstr ""
+
+#: templates/login.html:55
+msgid "سجّل الآن"
+msgstr ""
+
+#: templates/register.html:3
+msgid "إنشاء حساب - المولّد الذكي للاختبارات"
+msgstr ""
+
+#: templates/register.html:10
+msgid "إنشاء حساب جديد"
+msgstr ""
+
+#: templates/register.html:11
+msgid "انضم إلينا وابدأ في توليد اختباراتك الذكية"
+msgstr ""
+
+#: templates/register.html:18
+msgid "الاسم الكامل"
+msgstr ""
+
+#: templates/register.html:25
+msgid "أدخل اسمك الكامل"
+msgstr ""
+
+#: templates/register.html:40
+msgid "اختر اسم مستخدم"
+msgstr ""
+
+#: templates/register.html:49
+msgid "البريد الإلكتروني"
+msgstr ""
+
+#: templates/register.html:56
+msgid "example@domain.com"
+msgstr ""
+
+#: templates/register.html:72
+msgid "أدخل كلمة مرور قوية"
+msgstr ""
+
+#: templates/register.html:81
+msgid "إنشاء الحساب"
+msgstr ""
+
+#: templates/register.html:86
+msgid "لديك حساب بالفعل؟"
+msgstr ""
+
+#: templates/register.html:87
+msgid "سجّل دخولك"
+msgstr ""
+
+#: templates/results.html:12
+msgid "العودة إلى لوحة التحكم"
+msgstr ""
+
+#: templates/results.html:55
+msgid "تصدير الاختبار كملف Word"
+msgstr ""
+
+#: templates/results.html:57
+msgid "تصدير Word"
+msgstr ""
+
+#: templates/results.html:60
+msgid "تصدير الاختبار كملف PDF"
+msgstr ""
+
+#: templates/results.html:62
+msgid "تصدير PDF"
+msgstr ""
+
+#: templates/results.html:73
+msgid "السؤال"
+msgstr ""
+
+#: templates/results.html:82
+msgid "سؤال مباشر"
+msgstr ""
+
+#: templates/results.html:107
+msgid "الإجابة الصحيحة:"
+msgstr ""
+
+#: templates/results.html:119
+msgid ""
+"نصيحة: يمكنك تصدير الاختبار الى ملف word إذا كنت تريده اختبارأ جاهزاً "
+"للطلاب أو للتعديل عليه."
+msgstr ""
+

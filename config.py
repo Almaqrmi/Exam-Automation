@@ -35,6 +35,11 @@ class Config:
     # مفتاح Gemini API
     GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
     
+    # إعدادات اللغات (Babel)
+    BABEL_DEFAULT_LOCALE = 'ar'
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'
+    LANGUAGES = ['ar', 'en']
+    
     @staticmethod
     def init_app(app):
         """تهيئة التطبيق"""
