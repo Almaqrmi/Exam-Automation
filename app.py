@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.utils import secure_filename
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from io import BytesIO
 import zipfile
 import random
@@ -44,6 +44,14 @@ def set_language(lang):
     if lang in app.config.get('LANGUAGES', ['ar', 'en']):
         session['lang'] = lang
     return redirect(request.referrer or url_for('dashboard'))
+
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({
+        "status": "ok",
+        "service": "running",
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }), 200
 
 # إضافة فلتر from_json لـ Jinja2
 @app.template_filter('from_json')
