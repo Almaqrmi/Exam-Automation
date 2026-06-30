@@ -1,0 +1,32 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    # Every 13 minutes
+    - cron: "*/13 * * * *"
+
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 5
+
+    steps:
+      - name: Ping Render Health Endpoint
+        run: |
+          STATUS=$(curl \
+            --silent \
+            --output /dev/null \
+            --write-out "%{http_code}" \
+            https://exam-automation.onrender.com/health)
+
+          echo "HTTP Status: $STATUS"
+
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Health check failed."
+            exit 1
+          fi
+
+          echo "Render service is alive."
