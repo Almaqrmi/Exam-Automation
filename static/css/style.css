@@ -36,6 +36,8 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+   
+
 }
 
 /* ========== شريط التنقل ========== */
@@ -88,6 +90,10 @@ body {
 .nav-link:hover {
     background: var(--primary-color);
     transform: translateY(-2px);
+}
+
+.nav-link i, .nav-user i, .nav-brand i {
+    display: inline-block;
 }
 
 .nav-user {
@@ -1212,9 +1218,61 @@ body {
 
 /* ========== استجابة الشاشات ========== */
 @media (max-width: 768px) {
+    .navbar .container {
+        padding: 10px;
+    }
+
+    .nav-brand {
+        align-items: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--primary-light);
+        gap: 5px;
+    }
+
+    .nav-brand i {
+        font-size: 1.2rem;
+    }
+
     .nav-menu {
-        flex-wrap: wrap;
-        gap: 10px;
+        flex-wrap: nowrap;
+        gap: 5px;
+    }
+
+    .nav-link, .nav-user {
+        padding: 8px;
+        gap: 0; /* Remove gap so hidden text doesn't take space */
+    }
+
+    .nav-user {
+        border: none;
+        background: transparent;
+    }
+
+    .nav-link span, .nav-user span {
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.8rem;
+    }
+
+    .nav-link:hover span, .nav-user:hover span {
+        max-width: 150px;
+        opacity: 1;
+        margin-right: 8px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.15s; /* Smooth delay on hover */
+    }
+
+    [dir="ltr"] .nav-link:hover span, [dir="ltr"] .nav-user:hover span {
+        margin-right: 0;
+        margin-left: 8px;
+    }
+
+    .nav-link i, .nav-user i {
+        font-size: 1.2rem;
+        margin: 0 !important;
     }
 
     .flash-container {
@@ -1329,4 +1387,4 @@ body {
 
 .lang-dropdown:hover .lang-dropdown-content {
     display: block;
-}
+}
